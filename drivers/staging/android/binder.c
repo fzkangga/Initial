@@ -467,6 +467,7 @@ enum binder_deferred_state {
 	BINDER_DEFERRED_RELEASE      = 0x04,
 };
 
+<<<<<<< HEAD
 /**
  * struct binder_priority - scheduler policy and priority
  * @sched_policy            scheduler policy
@@ -540,6 +541,8 @@ struct binder_priority {
  *
  * Bookkeeping structure for binder processes
  */
+=======
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 struct binder_proc {
 	struct hlist_node proc_node;
 	struct rb_root threads;
@@ -659,6 +662,7 @@ struct binder_transaction {
 	spinlock_t lock;
 };
 
+<<<<<<< HEAD
 /**
  * binder_proc_lock() - Acquire outer lock for given binder_proc
  * @proc:         struct binder_proc to acquire
@@ -892,6 +896,8 @@ static struct binder_work *binder_dequeue_work_head(
 	return w;
 }
 
+=======
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 static void
 binder_defer_work(struct binder_proc *proc, enum binder_deferred_state defer);
 static void binder_free_thread(struct binder_thread *thread);
@@ -967,6 +973,7 @@ static bool binder_has_work(struct binder_thread *thread, bool do_proc_work)
 	return has_work;
 }
 
+<<<<<<< HEAD
 static bool binder_available_for_proc_work_ilocked(struct binder_thread *thread)
 {
 	return !thread->transaction_stack &&
@@ -1216,6 +1223,10 @@ static void binder_transaction_priority(struct task_struct *task,
 
 static struct binder_node *binder_get_node_ilocked(struct binder_proc *proc,
 						   binder_uintptr_t ptr)
+=======
+static struct binder_node *binder_get_node(struct binder_proc *proc,
+					   binder_uintptr_t ptr)
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 {
 	struct rb_node *n = proc->nodes.rb_node;
 	struct binder_node *node;
@@ -5204,11 +5215,16 @@ static void print_binder_ref_olocked(struct seq_file *m,
 {
 	binder_node_lock(ref->node);
 	seq_printf(m, "  ref %d: desc %d %snode %d s %d w %d d %pK\n",
+<<<<<<< HEAD
 		   ref->data.debug_id, ref->data.desc,
 		   ref->node->proc ? "" : "dead ",
 		   ref->node->debug_id, ref->data.strong,
 		   ref->data.weak, ref->death);
 	binder_node_unlock(ref->node);
+=======
+		   ref->debug_id, ref->desc, ref->node->proc ? "" : "dead ",
+		   ref->node->debug_id, ref->strong, ref->weak, ref->death);
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 }
 
 static void print_binder_proc(struct seq_file *m,

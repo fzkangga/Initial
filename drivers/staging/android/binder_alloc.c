@@ -116,7 +116,11 @@ static void binder_insert_allocated_buffer_locked(
 	rb_insert_color(&new_buffer->rb_node, &alloc->allocated_buffers);
 }
 
+<<<<<<< HEAD
 static struct binder_buffer *binder_alloc_prepare_to_free_locked(
+=======
+static struct binder_buffer *binder_alloc_buffer_lookup_locked(
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 		struct binder_alloc *alloc,
 		uintptr_t user_ptr)
 {
@@ -135,6 +139,7 @@ static struct binder_buffer *binder_alloc_prepare_to_free_locked(
 			n = n->rb_left;
 		else if (kern_ptr > buffer)
 			n = n->rb_right;
+<<<<<<< HEAD
 		else {
 			/*
 			 * Guard against user threads attempting to
@@ -148,6 +153,10 @@ static struct binder_buffer *binder_alloc_prepare_to_free_locked(
 			buffer->free_in_progress = 1;
 			return buffer;
 		}
+=======
+		else
+			return buffer;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 	return NULL;
 }
@@ -163,13 +172,22 @@ static struct binder_buffer *binder_alloc_prepare_to_free_locked(
  *
  * Return:	Pointer to buffer or NULL
  */
+<<<<<<< HEAD
 struct binder_buffer *binder_alloc_prepare_to_free(struct binder_alloc *alloc,
 						   uintptr_t user_ptr)
+=======
+struct binder_buffer *binder_alloc_buffer_lookup(struct binder_alloc *alloc,
+						 uintptr_t user_ptr)
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 {
 	struct binder_buffer *buffer;
 
 	mutex_lock(&alloc->mutex);
+<<<<<<< HEAD
 	buffer = binder_alloc_prepare_to_free_locked(alloc, user_ptr);
+=======
+	buffer = binder_alloc_buffer_lookup_locked(alloc, user_ptr);
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	mutex_unlock(&alloc->mutex);
 	return buffer;
 }
@@ -273,7 +291,11 @@ err_no_vma:
 		up_write(&mm->mmap_sem);
 		mmput(mm);
 	}
+<<<<<<< HEAD
 	return vma ? -ENOMEM : -ESRCH;
+=======
+	return -ENOMEM;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 }
 
 struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
@@ -289,12 +311,19 @@ struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
 	void *has_page_addr;
 	void *end_page_addr;
 	size_t size, data_offsets_size;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 
 	if (alloc->vma == NULL) {
 		pr_err("%d: binder_alloc_buf, no vma\n",
 		       alloc->pid);
+<<<<<<< HEAD
 		return ERR_PTR(-ESRCH);
+=======
+		return NULL;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 
 	data_offsets_size = ALIGN(data_size, sizeof(void *)) +
@@ -304,21 +333,33 @@ struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
 				"%d: got transaction with invalid size %zd-%zd\n",
 				alloc->pid, data_size, offsets_size);
+<<<<<<< HEAD
 		return ERR_PTR(-EINVAL);
+=======
+		return NULL;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 	size = data_offsets_size + ALIGN(extra_buffers_size, sizeof(void *));
 	if (size < data_offsets_size || size < extra_buffers_size) {
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
 				"%d: got transaction with invalid extra_buffers_size %zd\n",
 				alloc->pid, extra_buffers_size);
+<<<<<<< HEAD
 		return ERR_PTR(-EINVAL);
+=======
+		return NULL;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 	if (is_async &&
 	    alloc->free_async_space < size + sizeof(struct binder_buffer)) {
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
 			     "%d: binder_alloc_buf size %zd failed, no async space left\n",
 			      alloc->pid, size);
+<<<<<<< HEAD
 		return ERR_PTR(-ENOSPC);
+=======
+		return NULL;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 
 	while (n) {
@@ -339,7 +380,11 @@ struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
 	if (best_fit == NULL) {
 		pr_err("%d: binder_alloc_buf size %zd failed, no address space\n",
 			alloc->pid, size);
+<<<<<<< HEAD
 		return ERR_PTR(-ENOSPC);
+=======
+		return NULL;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	}
 	if (n == NULL) {
 		buffer = rb_entry(best_fit, struct binder_buffer, rb_node);
@@ -362,6 +407,7 @@ struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
 		(void *)PAGE_ALIGN((uintptr_t)buffer->data + buffer_size);
 	if (end_page_addr > has_page_addr)
 		end_page_addr = has_page_addr;
+<<<<<<< HEAD
 	ret = binder_update_page_range(alloc, 1,
 	    (void *)PAGE_ALIGN((uintptr_t)buffer->data), end_page_addr, NULL);
 	if (ret)
@@ -370,6 +416,14 @@ struct binder_buffer *binder_alloc_new_buf_locked(struct binder_alloc *alloc,
 	rb_erase(best_fit, &alloc->free_buffers);
 	buffer->free = 0;
 	buffer->free_in_progress = 0;
+=======
+	if (binder_update_page_range(alloc, 1,
+	    (void *)PAGE_ALIGN((uintptr_t)buffer->data), end_page_addr, NULL))
+		return NULL;
+
+	rb_erase(best_fit, &alloc->free_buffers);
+	buffer->free = 0;
+>>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 	binder_insert_allocated_buffer_locked(alloc, buffer);
 	if (buffer_size != size) {
 		struct binder_buffer *new_buffer = (void *)buffer->data + size;
