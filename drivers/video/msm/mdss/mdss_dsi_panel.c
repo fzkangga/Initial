@@ -24,7 +24,6 @@
 
 #include "mdss_dsi.h"
 
-
 #define DT_CMD_HDR 6
 
 /* NT35596 panel specific status variables */
