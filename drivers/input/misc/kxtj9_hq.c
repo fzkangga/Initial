@@ -500,7 +500,9 @@ static void kionix_accel_grp1_report_accel_data(struct kionix_accel_driver
 	int err;
 	struct input_dev *input_dev = acceld->input_dev;
 	int loop = KIONIX_I2C_RETRY_COUNT;
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 	ktime_t timestamp;
+#endif
 
 	if (atomic_read(&acceld->accel_enabled) > 0) {
 		if (atomic_read(&acceld->accel_enable_resume) > 0) {
@@ -552,7 +554,9 @@ static void kionix_accel_grp1_report_accel_data(struct kionix_accel_driver
 
 				if (atomic_read(&acceld->accel_input_event)
 					> 0) {
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					timestamp = ktime_get_boottime();
+#endif
 					input_report_abs(acceld->input_dev,
 							 ABS_X,
 							 acceld->accel_data
@@ -565,6 +569,7 @@ static void kionix_accel_grp1_report_accel_data(struct kionix_accel_driver
 							 ABS_Z,
 							 acceld->accel_data
 							 [acceld->axis_map_z]);
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					input_event(acceld->input_dev,
 							 EV_SYN,
 							 SYN_TIME_SEC,
@@ -573,6 +578,7 @@ static void kionix_accel_grp1_report_accel_data(struct kionix_accel_driver
 							 EV_SYN,
 							 SYN_TIME_NSEC,
 							 ktime_to_timespec(timestamp).tv_nsec);
+#endif
 					input_sync(acceld->input_dev);
 				}
 
@@ -709,7 +715,9 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 	int err;
 	struct input_dev *input_dev = acceld->input_dev;
 	int loop;
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 	ktime_t timestamp;
+#endif
 
 	/* Only read the output registers if enabled */
 	if (atomic_read(&acceld->accel_enabled) > 0) {
@@ -736,6 +744,20 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 			} else {
 				write_lock(&acceld->rwlock_accel_data);
 
+#ifdef CONFIG_SENSORS_KIONIX_ACCEL
+				x = ((s16)
+				     le16_to_cpu(accel_data.accel_data_s16
+						 [acceld->axis_map_x])) >>
+				    acceld->shift;
+				y = ((s16)
+				     le16_to_cpu(accel_data.accel_data_s16
+						 [acceld->axis_map_y])) >>
+				    acceld->shift;
+				z = ((s16)
+				     le16_to_cpu(accel_data.accel_data_s16
+						 [acceld->axis_map_z])) >>
+				    acceld->shift;
+#else
 				x = ((s16)
 				     le16_to_cpu(accel_data.accel_data_s16
 						 [acceld->axis_map_x]));
@@ -758,7 +780,9 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 
 				if (atomic_read(&acceld->accel_input_event)
 					> 0) {
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					timestamp = ktime_get_boottime();
+#endif
 					input_report_abs(acceld->input_dev,
 							 ABS_X,
 							 acceld->accel_data
@@ -771,6 +795,7 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 							 ABS_Z,
 							 acceld->accel_data
 							 [acceld->axis_map_z]);
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					input_event(acceld->input_dev,
 							 EV_SYN,
 							 SYN_TIME_SEC,
@@ -779,6 +804,7 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 							 EV_SYN,
 							 SYN_TIME_NSEC,
 							 ktime_to_timespec(timestamp).tv_nsec);
+#endif
 					input_sync(acceld->input_dev);
 				}
 
@@ -972,7 +998,9 @@ static int accel_poll_thread(void *data)
 	int err;
 	struct input_dev *input_dev = acceld->input_dev;
 	int loop;
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 	ktime_t timestamp;
+#endif
 
 	while (true) {
 		wait_event_interruptible(acceld->accel_wq,
@@ -1019,6 +1047,20 @@ static int accel_poll_thread(void *data)
 
 					write_lock(&acceld->rwlock_accel_data);
 
+#ifdef CONFIG_SENSORS_KIONIX_ACCEL
+					x = ((s16)
+							le16_to_cpu(accel_data.accel_data_s16
+								[acceld->axis_map_x])) >>
+				    acceld->shift;
+					y = ((s16)
+							le16_to_cpu(accel_data.accel_data_s16
+								[acceld->axis_map_y])) >>
+				    acceld->shift;
+					z = ((s16)
+							le16_to_cpu(accel_data.accel_data_s16
+								[acceld->axis_map_z])) >>
+				    acceld->shift;
+#else
 					x = ((s16)
 							le16_to_cpu(accel_data.accel_data_s16
 								[acceld->axis_map_x]));
@@ -1028,6 +1070,7 @@ static int accel_poll_thread(void *data)
 					z = ((s16)
 							le16_to_cpu(accel_data.accel_data_s16
 								[acceld->axis_map_z]));
+#endif
 
 					acceld->accel_data[acceld->axis_map_x] =
 						(acceld->negate_x ? -x : x) +
@@ -1041,7 +1084,9 @@ static int accel_poll_thread(void *data)
 
 					if (atomic_read(&acceld->accel_input_event)
 							> 0) {
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 						timestamp = ktime_get_boottime();
+#endif
 						input_report_abs(acceld->input_dev,
 								ABS_X,
 								acceld->accel_data
@@ -1054,6 +1099,7 @@ static int accel_poll_thread(void *data)
 								ABS_Z,
 								acceld->accel_data
 								[acceld->axis_map_z]);
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 						input_event(acceld->input_dev,
 								 EV_SYN,
 								 SYN_TIME_SEC,
@@ -1062,6 +1108,7 @@ static int accel_poll_thread(void *data)
 								 EV_SYN,
 								 SYN_TIME_NSEC,
 								 ktime_to_timespec(timestamp).tv_nsec);
+#endif
 						input_sync(acceld->input_dev);
 					}
 					write_unlock(&acceld->rwlock_accel_data);
@@ -1090,7 +1137,9 @@ static void kionix_accel_grp4_report_accel_data(struct kionix_accel_driver
 	int err;
 	struct input_dev *input_dev = acceld->input_dev;
 	int loop;
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 	ktime_t timestamp;
+#endif
 
 	/* Only read the output registers if enabled */
 	if (atomic_read(&acceld->accel_enabled) > 0) {
@@ -1144,7 +1193,9 @@ static void kionix_accel_grp4_report_accel_data(struct kionix_accel_driver
 
 				if (atomic_read(&acceld->accel_input_event)
 					> 0) {
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					timestamp = ktime_get_boottime();
+#endif
 					input_report_abs(acceld->input_dev,
 							 ABS_X,
 							 acceld->accel_data
@@ -1157,6 +1208,7 @@ static void kionix_accel_grp4_report_accel_data(struct kionix_accel_driver
 							 ABS_Z,
 							 acceld->accel_data
 							 [acceld->axis_map_z]);
+#ifndef CONFIG_SENSORS_KIONIX_ACCEL
 					input_event(acceld->input_dev,
 							 EV_SYN,
 							 SYN_TIME_SEC,
@@ -1165,6 +1217,7 @@ static void kionix_accel_grp4_report_accel_data(struct kionix_accel_driver
 							 EV_SYN,
 							 SYN_TIME_NSEC,
 							 ktime_to_timespec(timestamp).tv_nsec);
+#endif
 					input_sync(acceld->input_dev);
 				}
 				write_unlock(&acceld->rwlock_accel_data);
