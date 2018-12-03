@@ -767,6 +767,7 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver
 				z = ((s16)
 				     le16_to_cpu(accel_data.accel_data_s16
 						 [acceld->axis_map_z])) ;
+#endif
 
 				acceld->accel_data[acceld->axis_map_x] =
 				    (acceld->negate_x ? -x : x) +
