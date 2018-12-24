@@ -52,6 +52,10 @@ endif
 comma = ,
 
 
+# Cortex-A7 optimizations
+arch-$(CONFIG_ARCH_MSM8909)	:= $(call cc-option,-mcpu=cortex-a7+crc+crypto,-march=armv7-a+crc+crypto)
+tune-$(CONFIG_ARCH_MSM8909)	:= -mtune=cortex-a7
+
 # Cortex-A53 optimizations
 arch-$(CONFIG_ARCH_MSM8916)	:= $(call cc-option,-mcpu=cortex-a53+crc+crypto,-march=armv8-a+crc+crypto)
 tune-$(CONFIG_ARCH_MSM8916)	:= -mtune=cortex-a53
