@@ -1,6 +1,3 @@
-#ifdef CONFIG_MACH_HY_A16C3H
-#include "msm_camsensor_sdk_a16c3h.h"
-#else
 #ifndef __LINUX_MSM_CAMSENSOR_SDK_H
 #define __LINUX_MSM_CAMSENSOR_SDK_H
 
@@ -156,7 +153,9 @@ enum msm_actuator_addr_type {
 enum msm_actuator_write_type {
 	MSM_ACTUATOR_WRITE_HW_DAMP,
 	MSM_ACTUATOR_WRITE_DAC,
+#ifndef CONFIG_MACH_HY_A16C3H
 	MSM_ACTUATOR_WRITE_DAC_DW9718S,
+#endif
 };
 
 enum msm_actuator_i2c_operation {
@@ -185,11 +184,13 @@ enum msm_flash_cfg_type_t {
 	CFG_FLASH_HIGH,
 };
 
+#ifndef CONFIG_MACH_HY_A16C3H
 enum msm_sensor_output_format_t {
 	MSM_SENSOR_BAYER,
 	MSM_SENSOR_YCBCR,
 	MSM_SENSOR_META,
 };
+#endif
 
 struct msm_sensor_power_setting {
 	enum msm_sensor_power_seq_type_t seq_type;
@@ -237,7 +238,9 @@ struct msm_camera_sensor_slave_info {
 	uint8_t  is_init_params_valid;
 	struct msm_sensor_init_params sensor_init_params;
 	uint8_t is_flash_supported;
+#ifndef CONFIG_MACH_HY_A16C3H
 	enum msm_sensor_output_format_t output_format;
+#endif
 };
 
 struct msm_camera_i2c_reg_array {
@@ -317,8 +320,10 @@ struct region_params_t {
 	*/
 	uint16_t step_bound[2];
 	uint16_t code_per_step;
+#ifndef CONFIG_MACH_HY_A16C3H
 	/* qvalue for converting float type numbers to integer format */
 	uint32_t qvalue;
+#endif
 };
 
 struct reg_settings_t {
@@ -338,4 +343,3 @@ struct msm_camera_i2c_reg_setting_array {
 	uint16_t delay;
 };
 #endif /* __LINUX_MSM_CAM_SENSOR_H */
-#endif /* CONFIG_MACH_HY_A16C3H */
