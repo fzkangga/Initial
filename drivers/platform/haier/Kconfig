@@ -28,10 +28,10 @@ config MACH_RENDANG
 	help
 	  Support for Haier Rendang variant
 
-config MACH_HY_A16C3H
-	bool "A16C3H board"
+config MACH_G151
+	bool "G151 board"
 	select MACH_HAIER_MSM8909
 	help
-	  Support for Haier Rendang variant
+	  Support for Haier G151 variant
 
 endmenu
