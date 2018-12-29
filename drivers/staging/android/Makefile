@@ -4,10 +4,7 @@ obj-y					+= ion/
 obj-$(CONFIG_FIQ_DEBUGGER)		+= fiq_debugger/
 
 obj-$(CONFIG_ANDROID_BINDER_IPC)	+= binder.o binder_alloc.o
-<<<<<<< HEAD
 obj-$(CONFIG_ANDROID_BINDER_IPC_SELFTEST) += binder_alloc_selftest.o
-=======
->>>>>>> ee2cdb1bc37... FROMLIST: binder: move binder_alloc to separate file
 obj-$(CONFIG_ASHMEM)			+= ashmem.o
 obj-$(CONFIG_ANDROID_LOGGER)		+= logger.o
 obj-$(CONFIG_ANDROID_TIMED_OUTPUT)	+= timed_output.o
