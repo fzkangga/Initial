@@ -153,7 +153,7 @@ enum msm_actuator_addr_type {
 enum msm_actuator_write_type {
 	MSM_ACTUATOR_WRITE_HW_DAMP,
 	MSM_ACTUATOR_WRITE_DAC,
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	MSM_ACTUATOR_WRITE_DAC_DW9718S,
 #endif
 };
@@ -184,7 +184,7 @@ enum msm_flash_cfg_type_t {
 	CFG_FLASH_HIGH,
 };
 
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 enum msm_sensor_output_format_t {
 	MSM_SENSOR_BAYER,
 	MSM_SENSOR_YCBCR,
@@ -238,7 +238,7 @@ struct msm_camera_sensor_slave_info {
 	uint8_t  is_init_params_valid;
 	struct msm_sensor_init_params sensor_init_params;
 	uint8_t is_flash_supported;
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	enum msm_sensor_output_format_t output_format;
 #endif
 };
@@ -320,7 +320,7 @@ struct region_params_t {
 	*/
 	uint16_t step_bound[2];
 	uint16_t code_per_step;
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	/* qvalue for converting float type numbers to integer format */
 	uint32_t qvalue;
 #endif

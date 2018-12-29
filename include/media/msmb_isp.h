@@ -27,7 +27,7 @@
 #define ISP1_BIT              (0x10000 << 2)
 #define ISP_META_CHANNEL_BIT  (0x10000 << 3)
 #define ISP_SCRATCH_BUF_BIT   (0x10000 << 4)
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 #define ISP_PDAF_CHANNEL_BIT   (0x10000 << 5)
 #endif
 #define ISP_STATS_STREAM_BIT  0x80000000
@@ -84,7 +84,7 @@ enum msm_vfe_frame_skip_pattern {
 	EVERY_6FRAME,
 	EVERY_7FRAME,
 	EVERY_8FRAME,
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	EVERY_9FRAME,
 	EVERY_10FRAME,
 	EVERY_11FRAME,
@@ -117,7 +117,7 @@ struct msm_vfe_fetch_engine_cfg {
 	uint32_t buf_stride;
 };
 
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 struct msm_vfe_camif_subsample_cfg {
 	uint32_t irq_subsample_period;
 	uint32_t irq_subsample_pattern;
@@ -136,7 +136,7 @@ struct msm_vfe_camif_cfg {
 	uint32_t epoch_line0;
 	uint32_t epoch_line1;
 	enum msm_vfe_camif_input camif_input;
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	struct msm_vfe_camif_subsample_cfg subsample_cfg;
 #endif
 };
