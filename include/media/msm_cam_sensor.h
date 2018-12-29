@@ -272,7 +272,7 @@ struct msm_eeprom_cfg_data {
 	enum eeprom_cfg_type_t cfgtype;
 	uint8_t is_supported;
 	union {
-#ifdef CONFIG_MACH_HY_A16C3H
+#ifdef CONFIG_MACH_G151
 		char eeprom_name[MAX_SENSOR_NAME];
 #else
 		char eeprom_name[MAX_EEPROM_NAME];
@@ -318,7 +318,7 @@ struct msm_camera_sensor_slave_info32 {
 	uint8_t  is_init_params_valid;
 	struct msm_sensor_init_params sensor_init_params;
 	uint8_t is_flash_supported;
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	enum msm_sensor_output_format_t output_format;
 #endif
 };
@@ -365,7 +365,7 @@ struct msm_eeprom_cfg_data32 {
 	enum eeprom_cfg_type_t cfgtype;
 	uint8_t is_supported;
 	union {
-#ifdef CONFIG_MACH_HY_A16C3H
+#ifdef CONFIG_MACH_G151
 		char eeprom_name[MAX_SENSOR_NAME];
 #else
 		char eeprom_name[MAX_EEPROM_NAME];
