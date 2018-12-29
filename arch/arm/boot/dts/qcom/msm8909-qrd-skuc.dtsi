@@ -11,7 +11,7 @@
  */
 
 #include "msm8909-qrd.dtsi"
-#include "msm8909-camera-sensor-skuc.dtsi"
+#include "g151/msm8909-camera-sensor-a16c3h.dtsi"
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM8909 QRD SKUC";
@@ -19,6 +19,21 @@
 };
 
 &tlmm_pinmux {
+	ltr553_int_pin {
+		qcom,pins = <&gp 16>;
+		qcom,pin-func = <0>;
+		qcom,num-grp-pins = <1>;
+		label = "ltr553-irq";
+		ltr553_default: ltr553_default {
+			drive-strength = <6>;
+			bias-pull-up;
+		};
+		ltr553_sleep: ltr553_sleep {
+			drive-strength = <2>;
+			bias-pull-down;
+		};
+	};
+
 	ap3426_int_pin {
 		qcom,pins = <&gp 94>;
 		qcom,pin-func = <0>;
@@ -93,6 +108,22 @@
 			focaltech,resume-in-workqueue;
 		};
 
+		mstar@26 {
+			compatible = "mstar,msg2xxx";
+			reg = <0x26>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <13 0x2>;
+			vdd-supply = <&pm8909_l17>;
+			vcc_i2c-supply = <&pm8909_l6>;
+			mstar,family-id = <0x2>;
+			mstar,reset-gpio = <&msm_gpio 12 0x0>;
+			mstar,irq-gpio = <&msm_gpio 13 0x0>;
+			mstar,display-coords = <0 0 480 854>;
+			mstar,panel-coords = <0 0 480 854>;
+			mstar,button-map = <172 139 158>;
+			mstar,no-force-update;
+			mstar,i2c-pull-up;
+		};
 	};
 
 	i2c@78b5000 { /* BLSP1 QUP1 */
@@ -133,6 +164,40 @@
 			bosch,place = <5>;
 			bosch,gpio-int1 = <&msm_gpio 96 0x2002>;
 			bosch,gpio-int2 = <&msm_gpio 65 0x2002>;
+		};
+
+		kionix@e {
+			compatible = "kionix,kxtj2-1009";
+			reg = <0x0e>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <96 0x2002>;
+			vdd-supply = <&pm8909_l17>;
+			vio-supply = <&pm8909_l6>;
+			kionix,min_interval = <5>;
+			kionix,poll_interval = <100>;
+			kionix,accel_direction = <2>;
+			kionix,accel_irq_use_drdy = <0>;
+			kionix,accel_res = <12>;
+			kionix,accel_g_range = <2>;
+		};
+
+		liteon@23 {
+			compatible = "liteon,ltr553";
+			reg = <0x23>;
+			vdd-supply = <&pm8909_l17>;
+			vio-supply = <&pm8909_l6>;
+			interrupt-parent = <&msm_gpio>;
+			interrupts = <16 0x2002>;
+			pinctrl-names = "default","sleep";
+			pinctrl-0 = <&ltr553_default>;
+			pinctrl-1 = <&ltr553_sleep>;
+			liteon,irq-gpio = <&msm_gpio 16 0x2002>;
+			liteon,als-ps-persist = <0>;
+			liteon,ps-led = <0x7f>;
+			liteon,ps-pulses = <4>;
+			liteon,wakeup-threshold = <4>;
+			liteon,als-integration-time = <0>;
+			liteon,ps-distance-table = <1376 566 343 287 200 170 155>;
 		};
 	};
 
@@ -211,6 +276,9 @@
 };
 
 &pm8909_chg {
+	qcom,vddmax-mv = <4400>;
+	qcom,vddsafe-mv = <4430>;
+	qcom,vinmin-mv = <4520>;
 	qcom,batt-hot-percentage = <35>;
 	qcom,batt-cold-percentage = <70>;
 	qcom,tchg-mins = <360>;
@@ -224,31 +292,40 @@
 		qcom,rpull-up-kohm = <0>;
 		qcom,vref-batt-therm = <1800000>;
 
-		#include "batterydata-qrd-skuc-4v2-2000mah.dtsi"
+		#include "g151/batterydata-tmb-4v35-1900mah.dtsi"
 	};
 };
 
 &pm8909_bms {
 	status = "okay";
-	qcom,resume-soc = <95>;
+	qcom,max-voltage-uv = <4350000>;
+	qcom,resume-soc = <97>;
 	qcom,use-reported-soc;
 	qcom,force-bms-active-on-charger;
 	qcom,battery-data = <&qrd_batterydata>;
 };
 
 &sdc2_cd_on {
-	/delete-property/  bias-pull-up;
-	bias-disable;
+	/delete-property/ bias-pull-up;
+	bias-pull-down;
+};
+
+&sdc2_cd_off {
+	/delete-property/ bias-disable;
+	bias-pull-down;
 };
 
 &sdhc_2 {
+	interrupts = <0 1 2>;
+	interrupt-map = <0 &intc 0 125 0
+		1 &intc 0 221 0>;
+	interrupt-names = "hc_irq", "pwr_irq";
+	qcom,vdd-current-level = <4000 400000>;
+	/delete-property/ cd-gpios;
+	qcom,nonhotplug;
 	qcom,no-1p8v;
 	qcom,vdd-always-on;
 	qcom,vdd-lpm-sup;
-
-	qcom,vdd-current-level = <4000 400000>;
-
-	cd-gpios = <&msm_gpio 38 0x0>;
 };
 
 &pm8909_mpps {
@@ -281,7 +358,9 @@
 	};
 };
 
-#include "dsi-panel-ili9806e-fwvga-video.dtsi"
+#include "g151/dsi-panel-ili9806e-fwvga-video.dtsi"
+#include "g151/dsi-panel-ili9806e-fwvga-hsd-helitai-video.dtsi"
+#include "g151/dsi-panel-ili9806e-fwvga_hsd_huashi-video.dtsi"
 
 &mdss_mdp {
 	qcom,mdss-pref-prim-intf = "dsi";
@@ -325,5 +404,48 @@
 		qcom,hw-settle-time = <2>;
 		qcom,fast-avg-setup = <0>;
 		qcom,vadc-thermal-node;
+	};
+};
+
+&pm8909_l6 {
+	regulator-alway-on;
+};
+
+&pm8909_l17 {
+	regulator-always-on;
+};
+
+&usb_otg {
+	qcom,hsusb-otg-phy-init-seq = <0x73 0x80 0x6b 0x81 0xffffffff>;
+};
+
+&ts_int_suspend {
+	/delete-property/ bias-pull-down;
+	bias-pull-up;
+};
+
+&soc {
+	ramoops {
+		compatible = "ramoops";
+		status = "ok";
+
+		android,ramoops-buffer-start = <0x8c400000>;
+		android,ramoops-buffer-size = <0x100000>;
+		android,ramoops-console-size = <0x40000>;
+		android,ramoops-pmsg-size = <0x40000>;
+		android,ramoops-record-size = <0x20000>;
+		android,ramoops-dump-oops = <0x1>;
+	};
+};
+
+/ {
+	memory {
+		pstore_reserve_mem: pstore_reserve_region@0 {
+			linux,reserve-contiguous-region;
+			linux,reserve-region;
+			linux,remove-completely;
+			reg = <0x0 0x8c400000 0x0 0x00100000>;
+			label = "pstore_reserve_mem";
+		};
 	};
 };
