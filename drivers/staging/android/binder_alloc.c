@@ -18,7 +18,6 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <asm/cacheflush.h>
-#include <linux/err.h>
 #include <linux/list.h>
 #include <linux/mm.h>
 #include <linux/module.h>
@@ -467,7 +466,6 @@ static void binder_delete_free_buffer(struct binder_alloc *alloc,
 				      alloc->pid, buffer, prev);
 		}
 	}
-<<<<<<< HEAD
 	list_del(&buffer->entry);
 	if (free_page_start || free_page_end) {
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
@@ -478,24 +476,6 @@ static void binder_delete_free_buffer(struct binder_alloc *alloc,
 			buffer_start_page(buffer) : buffer_end_page(buffer),
 			(free_page_end ? buffer_end_page(buffer) :
 			buffer_start_page(buffer)) + PAGE_SIZE, NULL);
-=======
-
-	if (IS_ALIGNED((unsigned long)buffer->data, PAGE_SIZE)) {
-		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
-				   "%d: merge free, buffer start %pK is page aligned\n",
-				   alloc->pid, buffer->data);
-		to_free = false;
-	}
-
-	if (to_free) {
-		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
-				   "%d: merge free, buffer %pK do not share page with %pK or %pK\n",
-				   alloc->pid, buffer->data,
-				   prev->data, next ? next->data : NULL);
-		binder_update_page_range(alloc, 0, buffer_start_page(buffer),
-					 buffer_start_page(buffer) + PAGE_SIZE,
-					 NULL);
->>>>>>> 4516dd21189... FROMLIST: android: binder: Fix null ptr dereference in debug msg
 	}
 }
 
@@ -773,8 +753,8 @@ int binder_alloc_get_allocated_count(struct binder_alloc *alloc)
  */
 void binder_alloc_vma_close(struct binder_alloc *alloc)
 {
-	ACCESS_ONCE(alloc->vma) = NULL;
-	ACCESS_ONCE(alloc->vma_vm_mm) = NULL;
+	WRITE_ONCE(alloc->vma, NULL);
+	WRITE_ONCE(alloc->vma_vm_mm, NULL);
 }
 
 /**
