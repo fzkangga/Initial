@@ -871,7 +871,7 @@ static int get_cal_type_index(int32_t cal_type)
 	case AUDIO_CORE_METAINFO_CAL_TYPE:
 		ret = META_CAL;
 		break;
-#ifndef CONFIG_MACH_HY_A16C3H
+#ifndef CONFIG_MACH_G151
 	case CORE_CUSTOM_TOPOLOGIES_CAL_TYPE:
 		ret = CUST_TOP_CAL;
 		break;
@@ -976,7 +976,7 @@ static int q6core_init_cal_data(void)
 {
 	int ret = 0;
 	struct cal_type_info    cal_type_info[] = {
-#ifdef CONFIG_MACH_HY_A16C3H
+#ifdef CONFIG_MACH_G151
 		{{AUDIO_CORE_METAINFO_CAL_TYPE,
 		{q6core_alloc_cal, q6core_dealloc_cal, NULL,
 		q6core_set_cal, NULL, NULL} },
