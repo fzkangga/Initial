@@ -11,7 +11,7 @@
  */
 
 #include "msm8909-qrd.dtsi"
-#include "g151/msm8909-camera-sensor-a16c3h.dtsi"
+#include "a16c3h/msm8909-camera-sensor-a16c3h.dtsi"
 
 / {
 	model = "Qualcomm Technologies, Inc. MSM8909 QRD SKUC";
@@ -292,7 +292,7 @@
 		qcom,rpull-up-kohm = <0>;
 		qcom,vref-batt-therm = <1800000>;
 
-		#include "g151/batterydata-tmb-4v35-1900mah.dtsi"
+		#include "a16c3h/batterydata-tmb-4v35-1900mah.dtsi"
 	};
 };
 
@@ -358,9 +358,9 @@
 	};
 };
 
-#include "g151/dsi-panel-ili9806e-fwvga-video.dtsi"
-#include "g151/dsi-panel-ili9806e-fwvga-hsd-helitai-video.dtsi"
-#include "g151/dsi-panel-ili9806e-fwvga_hsd_huashi-video.dtsi"
+#include "a16c3h/dsi-panel-ili9806e-fwvga-video.dtsi"
+#include "a16c3h/dsi-panel-ili9806e-fwvga-hsd-helitai-video.dtsi"
+#include "a16c3h/dsi-panel-ili9806e-fwvga_hsd_huashi-video.dtsi"
 
 &mdss_mdp {
 	qcom,mdss-pref-prim-intf = "dsi";
