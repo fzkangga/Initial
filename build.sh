@@ -29,6 +29,7 @@ while read -p "Select defconfig
 ### G36C1H ###
 3. lineageos_rendang_n_defconfig ---> nougat
 4. lineageos_rendang_defconfig ---> oreo
+5. lineageos_rendang_sdfat_defconfig ---> oreo sdfat support
 
 
 " echoice
@@ -58,6 +59,13 @@ case "$echoice" in
 	4 )
 		DEFCONFIG="lineageos_rendang_defconfig"
 		BASE_VER="LOS-ARM-BINDER4-G36C1H-O"
+		export KBUILD_BUILD_USER=g36c1h
+		echo "lineageos_rendang_defconfig selected"
+		break
+		;;
+	5 )
+		DEFCONFIG="lineageos_rendang_sdfat_defconfig"
+		BASE_VER="LOS-ARM-BINDER4-SDFAT-G36C1H-O"
 		export KBUILD_BUILD_USER=g36c1h
 		echo "lineageos_rendang_defconfig selected"
 		break
