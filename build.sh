@@ -95,7 +95,7 @@ export KBUILD_BUILD_HOST=fzkdevmod
 
 # Paths
 KERNEL_DIR=`pwd`
-RESOURCE_DIR="/home/fzk/Desktop/project_hy"
+RESOURCE_DIR="/home/fzkdevmod/Desktop/fzkdevmod/project_hy"
 ANYKERNEL_DIR="$RESOURCE_DIR/hyper"
 TOOLCHAIN_DIR="$RESOURCE_DIR/toolchain"
 REPACK_DIR="$ANYKERNEL_DIR"
@@ -122,7 +122,7 @@ function make_kernel {
 #}
 
 function make_dtb {
-		$KERNEL_DIR/tools/dtbToolCM -2 -o $KERNEL_DIR/arch/arm/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
+		$KERNEL_DIR/dtbToolLineage -2 -o $KERNEL_DIR/arch/arm/boot/dt.img -s 2048 -p $KERNEL_DIR/scripts/dtc/ $KERNEL_DIR/arch/arm/boot/dts/
 		cp -vr $KERNEL_DIR/arch/arm/boot/dt.img $REPACK_DIR/dtb
 }
 
